@@ -1,0 +1,27 @@
+# System
+*.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.iml
+.obsidian/
+.claude/
+
+# Enviroments
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+*.tmp
+*.swp
+
+# Keep lab.zip only
+/lab1/lab1-calculator
+/lab1/lab1-temp-converter
+/lab2/calculator
+/lab2/converter
+/lab3/seg3102-lab-03-main
+/lab3/shopping-list
