@@ -1,0 +1,57 @@
+@switch (status()) {
+  @case ('loading') {
+    <p class="text-muted">Looking up author {{ authorId() }}...</p>
+  }
+  @case ('found') {
+    @if (author(); as a) {
+      <div class="author-details">
+        <h2>Here are details of the Author {{ a.id }}</h2>
+        <div class="row">
+          <div class="col-3">First Name:</div>
+          <div class="col-9">{{ a.firstName }}</div>
+        </div>
+        <div class="row">
+          <div class="col-3">Last Name:</div>
+          <div class="col-9">{{ a.lastName }}</div>
+        </div>
+        <div class="row">
+          <div class="col-3">Biography:</div>
+          <div class="col-9">
+            @if (a.bio) {
+              {{ a.bio }}
+            } @else {
+              <i>No biography available.</i>
+            }
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3">Books:</div>
+          <div class="col-9">
+            @if (a.books.length) {
+              <ul class="book-list">
+                @for (book of a.books; track book.id) {
+                  <li>
+                    <a class="book-link" [routerLink]="['/books', book.id]">{{ book.title }}</a>
+                    <span class="text-muted"> (id {{ book.id }})</span>
+                  </li>
+                }
+              </ul>
+            } @else {
+              <i>No books recorded for this author.</i>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  }
+  @case ('notFound') {
+    <div class="alert alert-warning" role="alert">
+      Sorry, no author was found with id <b>{{ authorId() }}</b>.
+    </div>
+  }
+  @case ('error') {
+    <div class="alert alert-danger" role="alert">
+      {{ errorMessage() }}
+    </div>
+  }
+}
