@@ -1,0 +1,12 @@
+// Haojian Wang, 300411829
+package seg3102.calculatorapi
+
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
+
+@SpringBootApplication
+class CalculatorApiApplication
+
+fun main(args: Array<String>) {
+    runApplication<CalculatorApiApplication>(*args)
+}
