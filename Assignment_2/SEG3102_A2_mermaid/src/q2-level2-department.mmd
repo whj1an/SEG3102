@@ -1,0 +1,9 @@
+sequenceDiagram
+  title Q2 Level 2 – Department module
+  participant UC as «use case»<br/>SelectWorkShifts
+  participant DF as :DepartmentFacade
+  participant REPO as :DepartmentRepository
+
+  UC->>DF: getDepartmentShifts(deptId)
+  DF->>REPO: dept = find(deptId)
+  DF-->>UC: dept.shifts

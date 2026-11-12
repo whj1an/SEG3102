@@ -1,0 +1,20 @@
+sequenceDiagram
+  title Q2 Level 2 – Employee module
+  participant UC as «use case»<br/>SelectWorkShifts
+  participant EF as :EmployeeFacade
+  participant REPO as :EmployeeRepository
+  participant EMP as emp:Employee
+
+  UC->>EF: getEmployeeDepartment(empId)
+  EF->>REPO: e = find(empId)
+  EF-->>UC: e.department
+
+  UC->>EF: addPreferredShifts(empId, shiftIds)
+  activate EF
+  EF->>REPO: emp = find(empId)
+  loop for each sId in shiftIds
+    EF->>EMP: preferredShifts.add(sId)
+  end
+  EF->>REPO: save(emp)
+  EF->>EF: emitPreferredShiftsSelected(empId, shiftIds)
+  deactivate EF

@@ -1,0 +1,26 @@
+sequenceDiagram
+  title Q1 Level 2 – Department module
+  participant UC as «use case»<br/>RegisterDepartmentEmployee
+  participant DF as :DepartmentFacade
+  participant REPO as :DepartmentRepository
+  participant DEPT as dept:Department
+
+  UC->>DF: getDepartments()
+  DF->>REPO: depts = findAll()
+  DF-->>UC: depts
+
+  UC->>DF: existsDepartment(deptId)
+  DF->>REPO: d = find(deptId)
+  DF-->>UC: d exists
+
+  UC->>DF: addEmployeeToDepartment(deptId, empId)
+  activate DF
+  DF->>REPO: dept = find(deptId)
+  DF->>DEPT: employees.add(empId)
+  DF->>REPO: save(dept)
+  DF->>DF: emitEmployeeAddedToDepartment(deptId, empId)
+  deactivate DF
+
+  UC->>DF: getDepartmentManager(deptId)
+  DF->>REPO: dept = find(deptId)
+  DF-->>UC: dept.manager

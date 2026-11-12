@@ -1,0 +1,21 @@
+sequenceDiagram
+  title Q1 Level 2 – Employee module: precondition queries
+  participant UC as «use case»<br/>RegisterDepartmentEmployee
+  participant EF as :EmployeeFacade
+  participant REPO as :EmployeeRepository
+
+  UC->>EF: getJobTitle(userId)
+  EF->>REPO: u = find(userId)
+  EF-->>UC: u.jobTitle.title
+
+  UC->>EF: existsBySin(sin)
+  EF->>REPO: e = findBySin(sin)
+  EF-->>UC: e exists
+
+  UC->>EF: existsEmployee(empId)
+  EF->>REPO: e = find(empId)
+  EF-->>UC: e exists
+
+  UC->>EF: getEmployeeDepartment(empId)
+  EF->>REPO: e = find(empId)
+  EF-->>UC: e.department

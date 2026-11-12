@@ -1,0 +1,41 @@
+sequenceDiagram
+  title Q1 Level 1 – Register Department Employee
+  actor AM as Airport Manager
+  participant UC as «use case»<br/>RegisterDepartmentEmployee
+  participant AS as «application service»<br/>:AuthenticationService
+  participant EF as «facade»<br/>EmployeeFacade
+  participant DF as «facade»<br/>DepartmentFacade
+  participant NS as «application service»<br/>:NotificationService
+
+  Note over AM,NS: Step 3 – command registerEmployee
+  AM->>UC: registerEmployee(empInfo)
+  activate UC
+  UC->>AS: userId = getSignedInUserId()
+  UC->>EF: title = getJobTitle(userId)
+  UC->>EF: sinTaken = existsBySin(empInfo.sin)
+  opt title = "Airport Manager" and not sinTaken
+    UC->>EF: empId = registerEmployee(empInfo)
+  end
+  UC-->>AM: empId (step 4: id displayed)
+  deactivate UC
+
+  Note over AM,NS: Step 5 – list of departments
+  AM->>UC: getDepartments()
+  activate UC
+  UC->>DF: depts = getDepartments()
+  UC-->>AM: depts
+  deactivate UC
+
+  Note over AM,NS: Steps 6–7 – command assignEmployeeToDepartment
+  AM->>UC: assignEmployeeToDepartment(empId, deptId)
+  activate UC
+  UC->>EF: empExists = existsEmployee(empId)
+  UC->>EF: curDept = getEmployeeDepartment(empId)
+  UC->>DF: deptExists = existsDepartment(deptId)
+  opt empExists and deptExists and curDept is null
+    UC->>DF: addEmployeeToDepartment(deptId, empId)
+    UC->>EF: setEmployeeDepartment(empId, deptId)
+    UC->>DF: mgrId = getDepartmentManager(deptId)
+    UC->>NS: notifyNewEmployee(mgrId, empId)
+  end
+  deactivate UC

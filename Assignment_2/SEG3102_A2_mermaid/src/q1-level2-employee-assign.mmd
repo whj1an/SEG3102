@@ -1,0 +1,14 @@
+sequenceDiagram
+  title Q1 Level 2 – Employee module: setEmployeeDepartment
+  participant UC as «use case»<br/>RegisterDepartmentEmployee
+  participant EF as :EmployeeFacade
+  participant REPO as :EmployeeRepository
+  participant EMP as emp:Employee
+
+  UC->>EF: setEmployeeDepartment(empId, deptId)
+  activate EF
+  EF->>REPO: emp = find(empId)
+  EF->>EMP: setDepartment(deptId)
+  EF->>REPO: save(emp)
+  EF->>EF: emitEmployeeAssignedToDepartment(empId, deptId)
+  deactivate EF

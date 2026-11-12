@@ -1,0 +1,24 @@
+sequenceDiagram
+  title Q2 Level 2 – Scheduling module
+  participant UC as «use case»<br/>SelectWorkShifts
+  participant SF as :SchedulingFacade
+  participant REPO as :ShiftRepository
+
+  UC->>SF: getUpcomingShifts(deptShiftIds)
+  activate SF
+  loop for each id in deptShiftIds
+    SF->>REPO: s = find(id)
+    opt s.date > today
+      SF->>SF: upcoming.add(s)
+    end
+  end
+  SF-->>UC: upcoming
+  deactivate SF
+
+  UC->>SF: areUpcoming(shiftIds)
+  activate SF
+  loop for each id in shiftIds
+    SF->>REPO: s = find(id)
+  end
+  SF-->>UC: every s exists and s.date > today
+  deactivate SF

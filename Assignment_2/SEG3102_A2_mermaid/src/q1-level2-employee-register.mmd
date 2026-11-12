@@ -1,0 +1,26 @@
+sequenceDiagram
+  title Q1 Level 2 – Employee module: registerEmployee
+  participant UC as «use case»<br/>RegisterDepartmentEmployee
+  participant EF as :EmployeeFacade
+  participant FAC as :EmployeeFactory
+  participant REPO as :EmployeeRepository
+
+  UC->>EF: registerEmployee(empInfo)
+  activate EF
+  EF->>FAC: emp = createEmployee(empInfo)
+  activate FAC
+  create participant JOB as job:JobTitle
+  FAC->>JOB: «create» JobTitle(empInfo.jobTitle)
+  create participant ADDR as addr:Address
+  FAC->>ADDR: «create» Address(a.street, a.unitNumber, a.city, a.postalCode)
+  create participant BANK as bank:BankInfo
+  FAC->>BANK: «create» BankInfo(b.accountNumber, b.branchNumber, b.transitNumber)
+  FAC->>FAC: id = newEmployeeId()
+  create participant EMP as emp:Employee
+  FAC->>EMP: «create» Employee(id, empInfo.firstName, empInfo.lastName,<br/>empInfo.dateOfBirth, empInfo.sin, job, addr, bank)
+  deactivate FAC
+  Note over FAC,EMP: a = empInfo.address, b = empInfo.bankInfo<br/>emp.jobTitle = job, emp.address = addr, emp.bankInfo = bank
+  EF->>REPO: save(emp)
+  EF->>EF: emitEmployeeRegistered(emp.id)
+  EF-->>UC: emp.id
+  deactivate EF

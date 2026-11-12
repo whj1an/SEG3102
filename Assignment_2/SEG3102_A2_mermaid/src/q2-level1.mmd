@@ -1,0 +1,31 @@
+sequenceDiagram
+  title Q2 Level 1 – Select Work Shifts
+  actor E as Employee
+  participant UC as «use case»<br/>SelectWorkShifts
+  participant EF as «facade»<br/>EmployeeFacade
+  participant DF as «facade»<br/>DepartmentFacade
+  participant SF as «facade»<br/>SchedulingFacade
+
+  Note over E,SF: Steps 1–2 – list upcoming shifts of the employee's department
+  E->>UC: getUpcomingShifts(empId)
+  activate UC
+  UC->>EF: deptId = getEmployeeDepartment(empId)
+  opt deptId exists
+    UC->>DF: deptShiftIds = getDepartmentShifts(deptId)
+    UC->>SF: shifts = getUpcomingShifts(deptShiftIds)
+  end
+  UC-->>E: shifts
+  deactivate UC
+
+  Note over E,SF: Steps 3–4 – command selectShifts
+  E->>UC: selectShifts(empId, shiftIds)
+  activate UC
+  UC->>EF: deptId = getEmployeeDepartment(empId)
+  opt deptId exists
+    UC->>DF: deptShiftIds = getDepartmentShifts(deptId)
+    UC->>SF: upcoming = areUpcoming(shiftIds)
+    opt shiftIds ⊆ deptShiftIds and upcoming
+      UC->>EF: addPreferredShifts(empId, shiftIds)
+    end
+  end
+  deactivate UC
